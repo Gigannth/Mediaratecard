@@ -1,0 +1,12 @@
+# Confidential source files, FLUX drafts and private previews. Never commit.
+_private/
+*.pdf
+*.jfif
+
+# Local tooling
+.claude/settings.local.json
+
+# Folder sementara untuk upload lewat web
+_upload/
+_design/
+

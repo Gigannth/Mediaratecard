@@ -43,6 +43,13 @@ const rp = (n) => 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,
 const slugify = (s) => s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 const label = (m) => m.displayName || m.name;
 const url = (p = '') => BASE + p;
+// Cache busting: asset URLs carry a short content hash, so browsers fetch new CSS/JS after every update.
+const VER = (() => {
+  const h = require('crypto').createHash('sha1');
+  for (const f of ['src/css/site.css', 'src/js/main.js']) h.update(fs.readFileSync(path.join(ROOT, f)));
+  return h.digest('hex').slice(0, 8);
+})();
+const asset = (p) => `${url(p)}?v=${VER}`;
 const abs = (p = '') => (SITE_URL ? SITE_URL + p : '');
 
 const ownSections = (m) => m.sections.filter((s) => !s.collab && !s.addon);
@@ -155,7 +162,7 @@ ${can ? `<meta property="og:url" content="${esc(can)}">` : ''}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="${url('assets/site.css')}">
+<link rel="stylesheet" href="${asset('assets/site.css')}">
 ${SITE_URL ? jsonld.map((j) => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join('\n') : ''}
 </head>
 <body${sticky ? ' class="has-sticky"' : ''}>
@@ -191,7 +198,7 @@ ${body}
   </div>
 </footer>
 ${sticky}
-<script src="${url('assets/main.js')}" defer></script>
+<script src="${asset('assets/main.js')}" defer></script>
 </body>
 </html>
 `;
