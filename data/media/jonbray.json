@@ -1,0 +1,90 @@
+{
+  "slug": "jonbray",
+  "name": "JONBRAY",
+  "group": "flux",
+  "status": "published",
+  "updated": "November 2026",
+  "topics": [
+    "Komik & animasi",
+    "Komedi"
+  ],
+  "tagline": "Komik dan animasi komedi keseharian sejak 2013.",
+  "description": "Jonbray adalah brand komik dan animasi yang lahir pada 2013, berisi komedi keseharian yang mudah dipahami semua kalangan. Kontennya hadir sebagai hiburan ringan di tengah linimasa yang penuh berita berat, perdebatan, dan gosip.",
+  "platforms": [
+    {
+      "name": "Instagram",
+      "handle": "@jonbrayy"
+    }
+  ],
+  "contact": {
+    "whatsapp": "6285177804454"
+  },
+  "sections": [
+    {
+      "title": "Instagram",
+      "note": "RTP = materi dari klien (ready to post).",
+      "items": [
+        {
+          "service": "Carousel RTP",
+          "price": 3000000,
+          "originalPrice": 5000000,
+          "unit": "per posting"
+        },
+        {
+          "service": "Reels RTP",
+          "price": 3000000,
+          "originalPrice": 5000000,
+          "unit": "per posting"
+        },
+        {
+          "service": "Feed photo RTP",
+          "price": 2500000,
+          "originalPrice": 4500000,
+          "unit": "per posting"
+        },
+        {
+          "service": "IG Story",
+          "price": 500000,
+          "originalPrice": 1000000,
+          "unit": "per story"
+        }
+      ]
+    }
+  ],
+  "characters": {
+    "hero": [
+      {
+        "src": "img/jonbray/reporter.png",
+        "alt": "Karakter Jonbray memegang mikrofon sambil berpose",
+        "w": 366,
+        "h": 411
+      },
+      {
+        "src": "img/jonbray/lari.png",
+        "alt": "Karakter Jonbray berambut panjang berlari terburu-buru",
+        "w": 480,
+        "h": 523
+      },
+      {
+        "src": "img/jonbray/ketawa.png",
+        "alt": "Karakter Jonbray tertawa sambil menunjuk layar ponsel",
+        "w": 392,
+        "h": 306
+      }
+    ],
+    "feature": {
+      "src": "img/jonbray/lihat-hp.png",
+      "alt": "Dua karakter Jonbray melihat layar ponsel bersama",
+      "w": 900,
+      "h": 495
+    }
+  },
+  "instagram": "jonbrayy",
+  "metrics": {
+    "asOf": "rate card 2026",
+    "followers": 223000,
+    "engagementRate": null,
+    "avgLikes": null,
+    "avgComments": null
+  }
+}

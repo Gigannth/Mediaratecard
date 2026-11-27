@@ -1,0 +1,82 @@
+{
+  "slug": "folkshitkuy",
+  "name": "FOLKSHITKUY",
+  "group": "flux",
+  "status": "published",
+  "updated": "November 2026",
+  "topics": [
+    "Tren",
+    "Berita",
+    "Hiburan"
+  ],
+  "tagline": "Rangkuman tren, berita, dan hiburan yang sedang ramai di Indonesia.",
+  "description": "FOLKSHITKUY adalah akun media di Instagram yang setiap hari merangkum hal-hal yang sedang ramai di Indonesia, mulai dari tren dan berita hingga hiburan. Setiap layanan sudah termasuk pembuatan headline oleh tim FOLKSHITKUY, baik untuk materi dari klien maupun konten yang dibuat dari nol.",
+  "platforms": [
+    {
+      "name": "Instagram",
+      "handle": "@folkshitkuy"
+    }
+  ],
+  "taxNote": "Harga belum termasuk pajak (PPh 0,5%), ditanggung klien.",
+  "contact": {
+    "whatsapp": "6285211210469"
+  },
+  "sections": [
+    {
+      "title": "Instagram",
+      "note": "Semua layanan termasuk pembuatan headline.",
+      "items": [
+        {
+          "service": "Instagram carousel/reels",
+          "price": 5000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Instagram photo",
+          "price": 4500000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Instastory",
+          "price": 500000,
+          "unit": "per story",
+          "duration": "Tayang 24 jam"
+        }
+      ]
+    },
+    {
+      "title": "Pembuatan konten & kunjungan",
+      "note": "Semua layanan termasuk pembuatan headline.",
+      "items": [
+        {
+          "service": "Create content",
+          "detail": "Konten dibuat oleh tim FOLKSHITKUY",
+          "price": 10000000,
+          "unit": "per konten",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Event attending",
+          "detail": "Termasuk 1x posting Reels dan IG Story",
+          "price": 8000000,
+          "unit": "per kunjungan",
+          "duration": "Tayang permanen"
+        }
+      ]
+    }
+  ],
+  "revisions": [
+    "Materi dari klien (ready to post): gratis 1x revisi mayor dan 2x revisi minor.",
+    "Create content / kunjungan: gratis 3x revisi minor. Tidak menerima pengambilan ulang setelah storyline dari brief disetujui."
+  ],
+  "instagram": "folkshitkuy",
+  "metrics": {
+    "asOf": "rate card 2026",
+    "followers": 607000,
+    "engagementRate": null,
+    "avgLikes": null,
+    "avgComments": null
+  }
+}

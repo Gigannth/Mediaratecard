@@ -1,0 +1,238 @@
+{
+  "slug": "unexplnd",
+  "name": "UNEXPLND",
+  "group": "flux",
+  "status": "published",
+  "updated": "November 2026",
+  "topics": [
+    "Berita",
+    "Politik",
+    "Budaya pop"
+  ],
+  "tagline": "Berita, politik, dan budaya pop dengan sudut pandang di luar arus utama.",
+  "description": "UNEXPLND adalah outlet multimedia berbasis di Indonesia yang membahas berita, politik, budaya pop, dan peristiwa terbaru dari seluruh dunia dengan sudut pandang di luar arus utama. Selain akun utama @unexplnd, UNEXPLND mengelola akun @unexplnddotco dan podcast Explain Yourself, sehingga penempatan konten bisa menjangkau Instagram, TikTok, Threads, dan X.",
+  "platforms": [
+    {
+      "name": "Instagram",
+      "handle": "@unexplnd"
+    },
+    {
+      "name": "Instagram",
+      "handle": "@unexplnddotco"
+    },
+    {
+      "name": "Instagram (podcast)",
+      "handle": "@explainurselfpod"
+    },
+    {
+      "name": "Threads",
+      "handle": "@unexplnd"
+    },
+    {
+      "name": "TikTok",
+      "handle": "@unexplnd.co"
+    },
+    {
+      "name": "X",
+      "handle": "@unexplnd"
+    },
+    {
+      "name": "Website",
+      "handle": "unexplnd.co"
+    }
+  ],
+  "taxNote": "Harga belum termasuk pajak (PPh 2%), ditanggung klien.",
+  "contact": {
+    "whatsapp": "6285956073870",
+    "email": "contact@unexplnd.co"
+  },
+  "sections": [
+    {
+      "title": "Instagram",
+      "note": "Materi dari klien (ready to post). Bonus: adlibs dan penempatan logo/produk di salah satu episode podcast.",
+      "items": [
+        {
+          "service": "Single post",
+          "detail": "Foto tunggal",
+          "price": 14000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Carousel",
+          "price": 15000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Reels",
+          "price": 15000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Story",
+          "price": 5000000,
+          "unit": "per story",
+          "duration": "Tayang 24 jam"
+        }
+      ]
+    },
+    {
+      "title": "TikTok, Threads & X",
+      "note": "Materi dari klien (ready to post).",
+      "items": [
+        {
+          "service": "Words only",
+          "detail": "Threads & X",
+          "price": 7000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Words & photo",
+          "detail": "TikTok, Threads & X",
+          "price": 8000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Words, photo & video",
+          "detail": "TikTok, Threads & X",
+          "price": 9000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        }
+      ]
+    },
+    {
+      "title": "Layanan tambahan",
+      "addon": true,
+      "items": [
+        {
+          "service": "Create content",
+          "detail": "1x IG single/carousel/reels · termasuk drafting · 2x revisi",
+          "price": 5000000,
+          "unit": "per konten"
+        },
+        {
+          "service": "Event attending",
+          "detail": "1x kunjungan, 1 hari · termasuk biaya lain-lain",
+          "price": 2000000,
+          "unit": "per kunjungan"
+        },
+        {
+          "service": "Tag collab / paid partnership / owning content / link tap",
+          "detail": "IG feed foto, carousel, atau reels · 1 akun brand",
+          "price": 2000000,
+          "unit": "per akun"
+        },
+        {
+          "service": "Instagram boost",
+          "detail": "IG feed, reels, atau story · komisi 15% dari budget boost",
+          "price": 1000000,
+          "priceFrom": true,
+          "unit": "minimal budget"
+        }
+      ]
+    },
+    {
+      "title": "Placement di konten orisinal UNEXPLND",
+      "note": "Iklan Anda ditempatkan di dalam konten reguler UNEXPLND.",
+      "items": [
+        {
+          "service": "Instagram carousel",
+          "detail": "Iklan di slide terakhir · 30 posting per bulan",
+          "price": 30000000,
+          "unit": "per bulan"
+        },
+        {
+          "service": "Instagram Reels / TikTok video",
+          "detail": "Iklan di tengah video atau CTA · 30 posting per bulan",
+          "price": 45000000,
+          "unit": "per bulan"
+        }
+      ]
+    },
+    {
+      "title": "Komitmen 1 tahun",
+      "items": [
+        {
+          "service": "30x posting (carousel/reels) + 15x story",
+          "detail": "Materi dari klien",
+          "price": 475000000,
+          "originalPrice": 525000000,
+          "unit": "per tahun"
+        },
+        {
+          "service": "30x posting (carousel/reels) + 15x story + 5x event attending",
+          "price": 465000000,
+          "originalPrice": 535000000,
+          "unit": "per tahun"
+        },
+        {
+          "service": "60x posting (carousel/reels/foto) + 30x story",
+          "detail": "Materi dari klien",
+          "price": 950000000,
+          "originalPrice": 1050000000,
+          "unit": "per tahun"
+        },
+        {
+          "service": "60x posting (reels) + 30x story + 10x event attending",
+          "price": 920000000,
+          "originalPrice": 1070000000,
+          "unit": "per tahun"
+        }
+      ]
+    },
+    {
+      "title": "Kolaborasi UNEXPLND × FOLKSHITKUY",
+      "collab": true,
+      "items": [
+        {
+          "service": "IG carousel/reels",
+          "detail": "1x posting · materi dari klien",
+          "price": 26000000,
+          "originalPrice": 27000000,
+          "unit": "per paket"
+        },
+        {
+          "service": "IG foto",
+          "detail": "1x posting · materi dari klien",
+          "price": 24000000,
+          "originalPrice": 25000000,
+          "unit": "per paket"
+        },
+        {
+          "service": "IG carousel/reels",
+          "detail": "3x posting · materi dari klien",
+          "price": 75000000,
+          "originalPrice": 81000000,
+          "unit": "per paket"
+        },
+        {
+          "service": "IG foto",
+          "detail": "3x posting · materi dari klien",
+          "price": 69000000,
+          "originalPrice": 75000000,
+          "unit": "per paket"
+        }
+      ]
+    }
+  ],
+  "terms": [
+    "Iklan diposting setelah pembayaran diterima.",
+    "Sebelum membayar, konfirmasi jadwal hari dan jam tayang yang masih kosong.",
+    "Revisi konten maksimal satu kali; revisi berikutnya dikenakan biaya Rp 300.000 per revisi.",
+    "Tidak menerima iklan yang tidak sopan, perjudian, atau apa pun yang melanggar hukum.",
+    "Setelah invoice dibuat dan pembayaran dilakukan, dana tidak dapat dikembalikan."
+  ],
+  "instagram": "unexplnd",
+  "metrics": {
+    "asOf": "rate card 2026",
+    "followers": 1000000,
+    "engagementRate": null,
+    "avgLikes": null,
+    "avgComments": null
+  }
+}

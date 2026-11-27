@@ -1,0 +1,66 @@
+{
+  "slug": "gensmart",
+  "name": "GENSMART",
+  "group": "independent",
+  "status": "hidden",
+  "updated": "November 2026",
+  "topics": [
+    "Edukasi",
+    "Hiburan",
+    "Berita internasional"
+  ],
+  "tagline": "Edukasi, hiburan, dan berita dari berbagai negara, dikemas ringan untuk pembaca Indonesia.",
+  "description": "GENSMART adalah media digital di Instagram yang membagikan konten edukasi, hiburan, dan berita dari berbagai negara. Penyajiannya ringan dan mudah dipahami, dengan fokus pada wawasan dan inspirasi untuk pembaca Indonesia. Semua layanan menggunakan materi dari klien (ready to post), dan posting feed tayang permanen.",
+  "platforms": [
+    {
+      "name": "Instagram",
+      "handle": "gensmart"
+    }
+  ],
+  "contact": {
+    "whatsapp": "62882005498357"
+  },
+  "sections": [
+    {
+      "title": "Instagram",
+      "platform": "Instagram",
+      "note": "RTP = materi dari klien (ready to post).",
+      "items": [
+        {
+          "service": "Reels RTP",
+          "price": 4000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen",
+          "type": "Reels"
+        },
+        {
+          "service": "Feed carousel RTP",
+          "price": 3500000,
+          "unit": "per posting",
+          "duration": "Tayang permanen",
+          "type": "Carousel"
+        },
+        {
+          "service": "Feed photo RTP",
+          "price": 3000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen",
+          "type": "Feed"
+        },
+        {
+          "service": "Instastory RTP",
+          "price": 500000,
+          "unit": "per story",
+          "duration": "Tayang 24 jam",
+          "type": "Story"
+        }
+      ]
+    }
+  ],
+  "terms": [
+    "Iklan baru diposting setelah pembayaran diterima.",
+    "Sebelum membayar, konfirmasi jadwal hari dan jam posting yang diinginkan.",
+    "Tidak menerima iklan yang melanggar hukum, rokok, produk tanpa izin edar BPOM, dan judi online.",
+    "Setelah invoice dibuat dan pembayaran diterima, pembayaran tidak dapat dikembalikan."
+  ]
+}
