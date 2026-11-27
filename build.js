@@ -17,9 +17,11 @@ const CONFIG = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.config.json'), '
 const SITE = CONFIG.name;
 const SITE_URL = DRAFTS ? '' : (CONFIG.siteUrl || '').replace(/\/?$/, CONFIG.siteUrl ? '/' : '');
 const BASE = SITE_URL ? new URL(SITE_URL).pathname : '/';
-const OUT = DRAFTS ? path.join(ROOT, '_private', 'preview') : path.join(ROOT, 'docs');
+const OUT = process.env.OUT_DIR ? path.resolve(process.env.OUT_DIR) : DRAFTS ? path.join(ROOT, '_private', 'preview') : path.join(ROOT, 'docs');
 const DATA_DIRS = [path.join(ROOT, 'data', 'media')];
 const NOTES_DIR = path.join(ROOT, '_private', 'notes'); // internal review notes, drafts only
+// Performance data per media; PERF_DIR env lets tests use fixture data without touching production files.
+const PERF_DIR = process.env.PERF_DIR ? path.resolve(process.env.PERF_DIR) : path.join(ROOT, 'data', 'performance');
 
 // Signature color per media: [background, text on that background]
 const PALETTE = {
@@ -117,26 +119,149 @@ function askBtn(m, item, price, cls = 'btn btn--sm ask') {
     : `<span class="${cls}" aria-disabled="true" title="Kontak belum tersedia">Tanya</span>`;
 }
 const flag = (text) => (text && DRAFTS ? `<div class="flag">${esc(text)}</div>` : '');
-// Instagram metrics only display when they carry an "as of" date.
-const hasMetrics = (m) => !!(m.metrics && m.metrics.asOf);
-const engagement = (m) => (hasMetrics(m) && typeof m.metrics.engagementRate === 'number'
-  ? [{ rate: m.metrics.engagementRate, platform: 'Instagram', period: m.metrics.asOf, method: m.metrics.method || '' }] : []);
+// ---------- performance data (data/performance/<slug>.json) ----------
+// A value is shown only when it is a positive number AND its entry names a data source.
+const num = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const pct = (n) => `${String(n).replace('.', ',')}%`;
 const compact = (n) => {
   const f = (v, u) => `${String(Math.round(v * 10) / 10).replace('.', ',')} ${u}`;
   return n >= 1e6 ? f(n / 1e6, 'jt') : n >= 1e3 ? f(n / 1e3, 'rb') : String(n);
 };
+const valid = (v) => typeof v === 'number' && isFinite(v) && v > 0;
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+const fmtDate = (s) => {
+  const d = /^(\d{4})-(\d{2})(?:-(\d{2}))?$/.exec(s || '');
+  return d ? `${d[3] ? Number(d[3]) + ' ' : ''}${MONTHS[Number(d[2]) - 1]} ${d[1]}` : (s || '');
+};
+const sourced = (e) => !!(e && e.data_source);
+const socialEntries = (m) => (m.perf ? m.perf.social_performance || [] : []).filter(sourced);
+const accountEntry = (m, platform = 'Instagram') => socialEntries(m).find((e) => e.platform === platform && e.content_type === 'Akun');
+// transparency line: source · period · items analyzed · last updated (only what is provided)
+function provenance(e, unit = 'konten') {
+  const parts = [`Sumber: ${esc(e.data_source)}`];
+  if (e.period_start || e.period_end) parts.push(`Periode ${esc([fmtDate(e.period_start), fmtDate(e.period_end)].filter(Boolean).join(' – '))}`);
+  const n = e.posts_analyzed || e.articles_analyzed;
+  if (valid(n)) parts.push(`${num(n)} ${unit} dianalisis`);
+  if (e.last_updated) parts.push(`Diperbarui ${esc(fmtDate(e.last_updated))}`);
+  return parts.join(' · ');
+}
+const engagement = (m) => {
+  const a = accountEntry(m);
+  return a && valid(a.engagement_rate) ? [{ rate: a.engagement_rate, platform: 'Instagram', period: a.last_updated ? fmtDate(a.last_updated) : a.data_source, method: a.engagement_rate_method || '' }] : [];
+};
 function metricChips(m) {
-  const x = m.metrics || {};
-  const ok = hasMetrics(m);
+  const a = accountEntry(m) || {};
   const list = [
-    ['Followers', x.followers, (v) => compact(v)],
-    ['Engagement rate', x.engagementRate, (v) => `${String(v).replace('.', ',')}%`],
-    ['Avg likes / post', x.avgLikes, (v) => compact(v)],
-    ['Avg komentar / post', x.avgComments, (v) => compact(v)],
+    ['Followers', a.followers, compact],
+    ['Engagement rate', a.engagement_rate, pct],
+    ['Avg likes / post', a.average_likes, compact],
+    ['Avg komentar / post', a.average_comments, compact],
   ];
-  return list.map(([lab, v, fmt]) => (ok && typeof v === 'number'
+  return list.map(([lab, v, fmt]) => (valid(v)
     ? `<li><small>${lab}</small><strong class="num">${fmt(v)}</strong></li>`
     : DRAFTS ? `<li class="stat-missing"><small>${lab}</small><strong>⚑ belum ada</strong></li>` : '')).join('');
+}
+
+// ---------- estimated CPM ----------
+// Each service is matched to the performance of the SAME platform and content type.
+// Views and reach are never mixed: the basis is always named. Median first, average as labelled fallback.
+const CPM_BASIS = {
+  'Story': { types: ['Story'], metrics: ['reach', 'views'] },
+  'Reels & video': { types: ['Reels', 'Video'], metrics: ['views', 'reach'] },
+  'Carousel': { types: ['Feed'], metrics: ['reach', 'views'] },
+  'Feed & foto': { types: ['Feed'], metrics: ['reach', 'views'] },
+};
+const METRIC_LABEL = { views: 'views', reach: 'reach', article: 'article views' };
+function pickMetric(e, kinds) {
+  for (const k of kinds) for (const stat of ['median', 'average']) {
+    const v = e[`${stat}_${k}`];
+    if (valid(v)) return { value: v, stat, kind: k };
+  }
+  return null;
+}
+function cpmRows(m) {
+  if (!m.perf) return [];
+  const rows = [];
+  for (const s of ownSections(m)) for (const i of s.items) {
+    if (i.priceFrom) continue;
+    const price = i.tiers ? (i.tiers.find((t) => t.label === '1x') || {}).price : i.price;
+    if (!valid(price)) continue;
+    const fmts = itemFormats(i);
+    if (fmts.some((f) => ['Paket & kontrak', 'Kunjungan & event', 'Buat konten'].includes(f)) && !i.tiers) continue;
+    // multi-post or time-based prices are not a single placement
+    if (!i.tiers && /\b\d+\s*x\b|\d+\s*posting|per (bulan|tahun|paket|kontrak)/i.test(`${i.detail || ''} ${i.unit || ''}`)) continue;
+    const plats = itemPlatforms(i, s, m);
+    const svc = i.tiers ? `${i.service} (1x)` : i.service;
+    // website article placements
+    if (/artikel|article/i.test(i.service)) {
+      const w = m.perf.website_performance;
+      if (sourced(w)) {
+        const pick = valid(w.median_article_views) ? { value: w.median_article_views, stat: 'median', kind: 'article' }
+          : valid(w.average_article_views) ? { value: w.average_article_views, stat: 'average', kind: 'article' } : null;
+        if (pick) rows.push({ m, item: i, svc, price, pick, entry: w, label: 'Website' });
+      }
+      continue;
+    }
+    if (plats.length !== 1) continue; // multi-platform bundles have no single basis
+    const usable = fmts.filter((f) => CPM_BASIS[f]);
+    for (const f of usable) {
+      const rule = CPM_BASIS[f];
+      const e = socialEntries(m).find((x) => x.platform === plats[0] && rule.types.includes(x.content_type));
+      const pick = e && pickMetric(e, rule.metrics);
+      if (!pick) continue;
+      rows.push({ m, item: i, svc, asType: usable.length > 1 ? e.content_type : '', price, pick, entry: e, label: `${e.platform} ${e.content_type}` });
+    }
+  }
+  return rows.map((r) => ({ ...r, cpm: Math.round((r.price / r.pick.value) * 1000) }));
+}
+const basisText = (r) => `${num(r.pick.value)} ${r.pick.stat === 'median' ? 'median' : 'rata-rata'} ${METRIC_LABEL[r.pick.kind]}`;
+
+function performanceSection(m) {
+  const blocks = [];
+  const w = m.perf && m.perf.website_performance;
+  if (sourced(w) && (valid(w.median_article_views) || valid(w.average_article_views))) {
+    const li = [['Median views artikel', w.median_article_views], ['Rata-rata views artikel', w.average_article_views]]
+      .filter(([, v]) => valid(v)).map(([l, v]) => `<li><small>${l}</small><strong class="num">${num(v)}</strong></li>`).join('');
+    blocks.push(`<article class="perf-card"><h3>Website</h3><ul class="perf-metrics">${li}</ul><p class="perf-src">${provenance(w, 'artikel')}</p></article>`);
+  }
+  for (const e of socialEntries(m)) {
+    const fields = e.content_type === 'Akun'
+      ? [['Followers', e.followers, compact], ['Engagement rate', e.engagement_rate, pct], ['Rata-rata likes / post', e.average_likes, compact], ['Rata-rata komentar / post', e.average_comments, compact]]
+      : [['Median views', e.median_views, num], ['Rata-rata views', e.average_views, num], ['Median reach', e.median_reach, num], ['Rata-rata reach', e.average_reach, num]];
+    const li = fields.filter(([, v]) => valid(v)).map(([l, v, f]) => `<li><small>${l}</small><strong class="num">${f(v)}</strong></li>`).join('');
+    if (!li) continue;
+    const er = e.content_type === 'Akun' && valid(e.engagement_rate)
+      ? `<p class="perf-note">Engagement rate ditampilkan sesuai sumber${e.engagement_rate_method ? `: ${esc(e.engagement_rate_method)}` : '. Metode perhitungannya tidak dicantumkan sumber.'}</p>` : '';
+    blocks.push(`<article class="perf-card"><h3>${esc(e.platform)} <span>${e.content_type === 'Akun' ? 'akun' : esc(e.content_type)}</span></h3><ul class="perf-metrics">${li}</ul>${er}<p class="perf-src">${provenance(e, 'posting')}</p></article>`);
+  }
+  const rows = cpmRows(m);
+  // Followers alone already show in the hero; the section appears once there is real content performance.
+  const hasContentData = rows.length || (sourced(w) && (valid(w.median_article_views) || valid(w.average_article_views)))
+    || socialEntries(m).some((e) => e.content_type !== 'Akun' && ['median_views', 'average_views', 'median_reach', 'average_reach'].some((k) => valid(e[k])));
+  if (!hasContentData) {
+    return DRAFTS ? `<aside class="review-panel" id="performa"><h2>⚑ Performa media belum ada data</h2><ul><li>Isi data/performance/${esc(m.slug)}.json (angka, periode, sumber, tanggal). Section ini otomatis tampil.</li></ul></aside>` : '';
+  }
+  const table = rows.length ? `
+      <h3 class="perf-sub">Efisiensi harga: estimasi CPM</h3>
+      <div class="cpm-wrap"><table class="cpm">
+        <thead><tr><th scope="col">Layanan</th><th scope="col" class="r">Harga</th><th scope="col" class="r">Basis performa</th><th scope="col" class="r">Estimasi CPM</th></tr></thead>
+        <tbody>${rows.map((r) => `
+          <tr>
+            <th scope="row"><span class="cpm-svc">${esc(r.svc)}</span>${r.asType ? `<small>Dihitung sebagai ${esc(r.asType)}</small>` : ''}</th>
+            <td class="r" data-label="Harga"><span class="cpm-num">${rp(r.price)}</span></td>
+            <td class="r" data-label="Basis performa"><span class="cpm-num">${num(r.pick.value)}</span><small>${r.pick.stat === 'median' ? 'median' : 'rata-rata'} ${METRIC_LABEL[r.pick.kind]} · ${esc(r.label)}</small></td>
+            <td class="r cpm-val" data-label="Estimasi CPM"><span class="cpm-num">${rp(r.cpm)}</span><small>per 1.000 ${METRIC_LABEL[r.pick.kind]}</small></td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>
+      <p class="perf-note">CPM (cost per mille) = harga ÷ performa × 1.000. Estimasi ini memakai harga di rate card dan performa historis${rows.some((r) => r.pick.stat === 'average') ? ' (median bila tersedia; baris bertanda “rata-rata” memakai rata-rata karena median tidak ada)' : ' (median)'}, dari platform dan jenis konten yang sama dengan layanannya. Ini bukan jaminan hasil; performa kampanye bisa berbeda.</p>` : '';
+  return `
+    <section class="perf" id="performa" aria-labelledby="perf-h">
+      <h2 id="perf-h">Performa media &amp; efisiensi harga</h2>
+      <p class="perf-lead">Data performa historis dari sumber yang tercantum. Bukan jaminan views, reach, atau engagement.</p>
+      ${blocks.length ? `<div class="perf-grid">${blocks.join('')}</div>` : ''}
+      ${table}
+    </section>`;
 }
 const IG_ICON = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor" stroke="none"/></svg>';
 
@@ -298,7 +423,7 @@ function renderMedia(m) {
     </section>`;
   }).join('');
 
-  const erBlock = er.length ? `<section class="info info--er"><h2>Engagement rate</h2><ul class="er-list">${er.map((e) => `<li><strong class="num">${String(e.rate).replace('.', ',')}%</strong><span>${esc(e.platform)} · data per ${esc(e.period)}</span>${e.method ? `<small>${esc(e.method)}</small>` : ''}</li>`).join('')}</ul></section>` : '';
+  const erBlock = ''; // engagement rate now lives in the performance section (with its source and period)
   const infoBlocks = [
     m.notice && `<section class="info info--soft"><h2>Sebelum memesan</h2><p>${esc(m.notice)}</p></section>`,
     m.highlights && `<section class="info info--soft"><h2>Yang Anda dapatkan</h2><ul>${m.highlights.map((h) => `<li>${esc(h)}</li>`).join('')}</ul></section>`,
@@ -311,6 +436,7 @@ function renderMedia(m) {
       <ul class="plat-list" aria-label="Platform">${m.platforms.map((p) => `<li>${esc(p.name)}${p.handle ? `<span>${esc(p.handle)}</span>` : ''}</li>`).join('')}</ul></section>`,
   ].filter(Boolean).join('\n');
 
+  const perfHtml = performanceSection(m);
   const review = DRAFTS && m.review && m.review.length
     ? `<aside class="review-panel"><h2>⚑ Perlu konfirmasi sebelum terbit</h2><ul>${m.review.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></aside>` : '';
 
@@ -326,7 +452,7 @@ function renderMedia(m) {
     title: `<span class="sr">Rate card </span>${esc(label(m))}`,
     tagline: esc(m.tagline),
     stats: metricChips(m),
-    note: hasMetrics(m) && m.instagram ? `Instagram @${esc(m.instagram)} · data per ${esc(m.metrics.asOf)}` : '',
+    note: accountEntry(m) && metricChips(m).includes('<strong class="num">') ? `Instagram${m.instagram ? ` @${esc(m.instagram)}` : ''} · ${provenance(accountEntry(m), 'posting')}` : '',
     actions: [
       m.instagram && `<a class="btn btn--ig" href="https://www.instagram.com/${encodeURIComponent(m.instagram)}/" target="_blank" rel="noopener" aria-label="Lihat Instagram @${esc(m.instagram)}">${IG_ICON}<span>Lihat Instagram<span class="lbl-long"> @${esc(m.instagram)}</span></span></a>`,
       general && `<a class="btn btn--dark" href="${esc(general)}" target="_blank" rel="noopener"><span class="lbl-long">Tanya via </span>WhatsApp</a>`,
@@ -336,12 +462,13 @@ function renderMedia(m) {
       : `<div class="float-stack" aria-hidden="true">${picks.map((x) => `<div class="float-card"><small>${esc(x.i.service)}</small><strong class="num">${rp(x.p)}</strong></div>`).join('')}</div>`,
   })}
   <div class="wrap">
-    <nav class="tabs" aria-label="Bagian rate card"><ul>${m.sections.map((s) => `<li><a href="#${slugify(s.title)}">${esc(s.title)}</a></li>`).join('')}<li><a href="#tentang">Tentang</a></li></ul></nav>
+    <nav class="tabs" aria-label="Bagian rate card"><ul>${m.sections.map((s) => `<li><a href="#${slugify(s.title)}">${esc(s.title)}</a></li>`).join('')}${perfHtml && !perfHtml.includes('review-panel') ? '<li><a href="#performa">Performa &amp; CPM</a></li>' : ''}<li><a href="#tentang">Tentang</a></li></ul></nav>
     <div class="layout">
       <div>
         ${review}
         <h2 class="sr">Daftar harga ${esc(label(m))}</h2>
         ${sections}
+        ${perfHtml}
         <div id="tentang">${infoBlocks}</div>
       </div>
       <aside aria-label="Kontak">
@@ -412,7 +539,7 @@ function tile(m) {
     <a class="tile${isLight(m.slug) ? ' on-light' : ''}${isDark(m.slug) ? ' is-dark' : ''}" href="${url(`media/${m.slug}/`)}" style="--media:${bg};--media-ink:${fg}">
       ${DRAFTS && n ? `<span class="flags chip chip--lime">⚑ ${n} perlu konfirmasi</span>` : ''}
       <div>
-        <div class="chip-row"><span class="chip">${m.group === 'flux' ? 'Grup FLUX' : 'Media independen'}</span>${hasMetrics(m) && m.metrics.followers ? `<span class="chip">${compact(m.metrics.followers)} followers</span>` : ''}${er.length ? `<span class="chip">ER ${String(er[0].rate).replace('.', ',')}%</span>` : ''}</div>
+        <div class="chip-row"><span class="chip">${m.group === 'flux' ? 'Grup FLUX' : 'Media independen'}</span>${accountEntry(m) && valid(accountEntry(m).followers) ? `<span class="chip">${compact(accountEntry(m).followers)} followers</span>` : ''}${er.length ? `<span class="chip">ER ${String(er[0].rate).replace('.', ',')}%</span>` : ''}</div>
         <h3>${esc(label(m))}</h3>
         <p>${esc(m.tagline)}</p>
       </div>
@@ -531,7 +658,8 @@ function renderDirectory() {
     if (s.collab && !DRAFTS) continue;
     for (const i of s.items) {
       const p = itemPrice(i);
-      rows.push({ m, s, i, p, plats: itemPlatforms(i, s, m), fmts: itemFormats(i) });
+      if (!m._cpm) m._cpm = cpmRows(m);
+      rows.push({ m, s, i, p, plats: itemPlatforms(i, s, m), fmts: itemFormats(i), cpm: m._cpm.filter((c) => c.item === i) });
     }
   }
   const count = (key, v) => rows.filter((r) => r[key].includes(v)).length;
@@ -590,7 +718,7 @@ function renderDirectory() {
           <a class="dir-media" href="${url(`media/${r.m.slug}/`)}" style="--media:${bg};--media-ink:${fg}">${esc(label(r.m))}</a>
           <div class="dir-svc"><strong>${esc(r.i.service)}</strong>${sub ? `<span>${esc(sub)}</span>` : ''}</div>
           <div class="dir-plat">${r.plats.map((p) => `<span class="tag">${esc(p)}</span>`).join('')}</div>
-          <div class="dir-price num">${r.i.originalPrice ? `<s>${rp(r.i.originalPrice)}</s>` : ''}<strong>${r.i.tiers || r.i.priceFrom ? 'Mulai ' : ''}${rp(r.p)}</strong></div>
+          <div class="dir-price num">${r.i.originalPrice ? `<s>${rp(r.i.originalPrice)}</s>` : ''}<strong>${r.i.tiers || r.i.priceFrom ? 'Mulai ' : ''}${rp(r.p)}</strong>${r.cpm.map((c) => `<small class="dir-cpm" title="Estimasi, ${esc(basisText(c))} ${esc(c.label)}">CPM ±${rp(c.cpm)} / 1.000 ${METRIC_LABEL[c.pick.kind]}</small>`).join('')}</div>
           ${askBtn(r.m, r.i, r.i.tiers ? null : r.p)}
         </li>`;
       }).join('')}
@@ -655,6 +783,10 @@ function load() {
     if (!fs.existsSync(dir)) continue;
     for (const f of fs.readdirSync(dir).filter((f) => f.endsWith('.json'))) {
       const m = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+      // performance data has its own publication status; hidden data never reaches the public site
+      const pf = path.join(PERF_DIR, `${m.slug}.json`);
+      const perf = fs.existsSync(pf) ? JSON.parse(fs.readFileSync(pf, 'utf8')) : null;
+      m.perf = perf && (perf.status === 'published' || DRAFTS) ? perf : null;
       if (!DRAFTS && m.status !== 'published') continue;
       if (DRAFTS) {
         // Merge private review notes and show held items with a flag

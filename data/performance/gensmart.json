@@ -1,0 +1,68 @@
+{
+  "slug": "gensmart",
+  "status": "published",
+  "website_performance": {
+    "average_article_views": null,
+    "median_article_views": null,
+    "articles_analyzed": null,
+    "period_start": null,
+    "period_end": null,
+    "data_source": null,
+    "last_updated": null
+  },
+  "social_performance": [
+    {
+      "platform": "Instagram",
+      "content_type": "Akun",
+      "followers": null,
+      "engagement_rate": null,
+      "engagement_rate_method": null,
+      "average_likes": null,
+      "average_comments": null,
+      "posts_analyzed": null,
+      "period_start": null,
+      "period_end": null,
+      "data_source": null,
+      "last_updated": null
+    },
+    {
+      "platform": "Instagram",
+      "content_type": "Reels",
+      "average_views": null,
+      "median_views": null,
+      "average_reach": null,
+      "median_reach": null,
+      "posts_analyzed": null,
+      "period_start": null,
+      "period_end": null,
+      "data_source": null,
+      "last_updated": null
+    },
+    {
+      "platform": "Instagram",
+      "content_type": "Story",
+      "average_views": null,
+      "median_views": null,
+      "average_reach": null,
+      "median_reach": null,
+      "posts_analyzed": null,
+      "period_start": null,
+      "period_end": null,
+      "data_source": null,
+      "last_updated": null
+    },
+    {
+      "platform": "Instagram",
+      "content_type": "Feed",
+      "average_views": null,
+      "median_views": null,
+      "average_reach": null,
+      "median_reach": null,
+      "posts_analyzed": null,
+      "period_start": null,
+      "period_end": null,
+      "data_source": null,
+      "last_updated": null
+    }
+  ]
+}
