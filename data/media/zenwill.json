@@ -2,14 +2,14 @@
   "slug": "zenwill",
   "name": "ZENWILL",
   "group": "independent",
-  "status": "hidden",
+  "status": "published",
   "updated": "November 2026",
   "tagline": "Media sosial dengan kanal di Instagram, TikTok, dan Facebook.",
   "description": "ZENWILL adalah media sosial yang hadir di Instagram, TikTok, dan Facebook. Brand dapat memasang konten berbayar dalam format Instagram Story, Feed hingga 10 slide, dan Reels hingga 3 menit, serta posting di TikTok dan Facebook. Untuk kolaborasi yang lebih dalam, tersedia media visit yang sudah termasuk pembuatan konten orisinal.",
   "platforms": [
     {
       "name": "Instagram",
-      "handle": null
+      "handle": "@zenwiill"
     },
     {
       "name": "TikTok",
@@ -86,5 +86,13 @@
         }
       ]
     }
-  ]
+  ],
+  "instagram": "zenwiill",
+  "metrics": {
+    "asOf": null,
+    "followers": null,
+    "engagementRate": null,
+    "avgLikes": null,
+    "avgComments": null
+  }
 }

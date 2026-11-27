@@ -2,7 +2,7 @@
   "slug": "gensmart",
   "name": "GENSMART",
   "group": "independent",
-  "status": "hidden",
+  "status": "published",
   "updated": "November 2026",
   "topics": [
     "Edukasi",
@@ -14,7 +14,7 @@
   "platforms": [
     {
       "name": "Instagram",
-      "handle": "gensmart"
+      "handle": "@gensmartt"
     }
   ],
   "contact": {
@@ -62,5 +62,13 @@
     "Sebelum membayar, konfirmasi jadwal hari dan jam posting yang diinginkan.",
     "Tidak menerima iklan yang melanggar hukum, rokok, produk tanpa izin edar BPOM, dan judi online.",
     "Setelah invoice dibuat dan pembayaran diterima, pembayaran tidak dapat dikembalikan."
-  ]
+  ],
+  "instagram": "gensmartt",
+  "metrics": {
+    "asOf": null,
+    "followers": null,
+    "engagementRate": null,
+    "avgLikes": null,
+    "avgComments": null
+  }
 }

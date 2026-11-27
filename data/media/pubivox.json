@@ -2,7 +2,7 @@
   "slug": "pubivox",
   "name": "PUBIVOX",
   "group": "independent",
-  "status": "hidden",
+  "status": "published",
   "updated": "November 2026",
   "topics": [
     "Gen Z",
@@ -14,7 +14,7 @@
   "platforms": [
     {
       "name": "Instagram",
-      "handle": null
+      "handle": "@pubivox"
     },
     {
       "name": "Threads",
@@ -79,5 +79,13 @@
         }
       ]
     }
-  ]
+  ],
+  "instagram": "pubivox",
+  "metrics": {
+    "asOf": null,
+    "followers": null,
+    "engagementRate": null,
+    "avgLikes": null,
+    "avgComments": null
+  }
 }

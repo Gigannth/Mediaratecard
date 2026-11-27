@@ -628,3 +628,17 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.05; margin: 0; let
 /* grid children default to min-width:auto and stretch to the long chip rows */
 .filters { display: block; }
 .filters > *, .f-panel, .f-top { min-width: 0; }
+
+/* Tablet (768–959px): 3 per row so 6 or 9 media fill every row */
+@media (min-width: 768px) and (max-width: 959px) {
+  .bento .tile:nth-child(n), .bento .tile:nth-child(n):last-child:nth-child(odd) { grid-column: span 2; }
+  .bento .tile:nth-child(n):last-child:nth-child(3n+1) { grid-column: 1 / -1; }
+  .bento .tile:nth-child(n):nth-last-child(2):nth-child(3n+1), .bento .tile:nth-child(n):last-child:nth-child(3n+2) { grid-column: span 3; }
+  .bento { gap: var(--s-3); }
+  .tile { padding: var(--s-4); min-height: 240px; box-shadow: 4px 4px 0 var(--ink); }
+  .tile h2, .tile h3 { font-size: 1.55rem; }
+  .tile p { font-size: 14px; }
+  .tile .from strong { font-size: 19px; }
+  .tile .arrow { width: 40px; height: 40px; font-size: 18px; }
+  .bento--mini .tile:nth-child(3) { display: flex; }
+}

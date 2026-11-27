@@ -29,7 +29,7 @@ const PALETTE = {
   'demen-film': ['#86e06f', '#120f2a'],  // hijau muda
   ssmedia: ['#e5262e', '#ffffff'],       // merah
   jonbray: ['#6cccf5', '#120f2a'],       // biru muda langit
-  zenwill: ['#2563ff', '#ffffff'],
+  zenwill: ['#ff7a1a', '#120f2a'],       // oranye (biru sudah dipakai WAHGENZ)
   pubivox: ['#b14bff', '#ffffff'],
   gensmart: ['#14c8e6', '#120f2a'],
 };
