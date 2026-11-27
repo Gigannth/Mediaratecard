@@ -544,3 +544,87 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.05; margin: 0; let
   .bento .tile:nth-child(n):last-child:nth-child(3n+2) { grid-column: span 3; }
 }
 @media (min-width: 640px) and (max-width: 959px) { .bento--mini .tile:nth-child(3) { display: none; } }
+
+/* ==========================================================
+   Filters v2 (Laws of UX):
+   - Common region + proximity: one panel, each group labeled
+   - Hick: 3 short groups, single choice each, "Semua" default
+   - Fitts: 44px+ chips, sort sits right next to the results it changes
+   - Jakob: search on top, "N layanan · Urutkan" bar like familiar shops
+   ========================================================== */
+.filters { gap: 0; padding: var(--s-4) var(--s-5); }
+.f-search { position: relative; display: block; margin-bottom: var(--s-2); }
+.f-search svg { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
+.f-search input { min-height: 54px; padding: 0 20px 0 50px; font-size: 16px; }
+.f-group { border: 0; margin: 0; padding: var(--s-3) 0; border-top: 1px dashed var(--line); display: block; }
+.f-group legend { float: left; width: 128px; padding: 12px 0 0; font: 700 12px/1.2 var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.f-group .f-chips { margin-left: 128px; display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.fchip { cursor: pointer; }
+.fchip input { position: absolute; opacity: 0; pointer-events: none; }
+.fchip span { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: var(--r-pill); border: 1.5px solid var(--line); background: var(--paper); font: 600 14px/1 var(--font-ui); color: var(--ink); white-space: nowrap; transition: background .12s, border-color .12s; }
+.fchip span em { font-style: normal; font-size: 12px; font-weight: 700; color: var(--ink-3); background: var(--white); border-radius: var(--r-pill); padding: 2px 7px; }
+.fchip:hover span { border-color: var(--ink-3); }
+.fchip input:checked + span { background: var(--ink); border-color: var(--ink); color: #fff; }
+.fchip input:checked + span em { background: rgba(255,255,255,.18); color: #fff; }
+.fchip input:focus-visible + span { outline: 3px solid var(--pink); outline-offset: 2px; }
+
+.results-bar { display: flex; align-items: center; gap: var(--s-3); margin: var(--s-4) 0 var(--s-3); flex-wrap: wrap; }
+.results-bar .dir-count { margin: 0; font-size: 15px; color: var(--ink-2); }
+.results-bar .dir-count strong { font: 800 20px/1 var(--font-display); color: var(--ink); margin-right: 2px; }
+.reset { min-height: 44px; padding: 0 14px; border: 0; background: none; color: var(--violet); font: 700 14px var(--font-ui); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.sort { margin-left: auto; display: flex; align-items: center; gap: var(--s-2); font-weight: 600; font-size: 14px; color: var(--ink-2); }
+.sort select { min-height: 44px; border-radius: var(--r-pill); border: 1.5px solid var(--ink); padding: 0 36px 0 16px; font: 600 14px var(--font-ui); background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23120f2a' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 14px center; appearance: none; -webkit-appearance: none; color: var(--ink); cursor: pointer; }
+
+@media (max-width: 639px) {
+  .filters { padding: var(--s-3) 0 var(--s-2); border-radius: var(--r-md); box-shadow: 4px 4px 0 var(--ink); overflow: hidden; }
+  .f-search { margin: 0 var(--s-3) var(--s-2); }
+  .f-group { padding: var(--s-3) 0 var(--s-2); }
+  .f-group legend { float: none; width: auto; padding: 0 var(--s-4) var(--s-2); }
+  /* one swipeable row per group instead of a wall of wrapped chips */
+  .f-group .f-chips { margin-left: 0; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; padding: 2px var(--s-4) 6px; scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
+  .f-group .f-chips::-webkit-scrollbar { display: none; }
+  .fchip { scroll-snap-align: start; flex: 0 0 auto; }
+  .results-bar { position: sticky; top: 76px; z-index: 5; background: var(--paper); margin: var(--s-3) calc(-1 * var(--gutter)) var(--s-2); padding: var(--s-2) var(--gutter); border-bottom: 1px solid var(--line); }
+  .sort span { display: none; }
+  .reset { padding: 0 8px; }
+}
+/* fieldsets default to min-width: min-content, which blocks horizontal chip scrolling */
+.filters, .f-group { min-width: 0; }
+.fchip, .f-chips label { position: relative; }
+.fchip input { left: 0; top: 0; width: 1px; height: 1px; }
+@media (max-width: 639px) {
+  /* one compact row: count · reset · sort */
+  .results-bar { flex-wrap: nowrap; gap: var(--s-2); }
+  .results-bar .dir-count { white-space: nowrap; font-size: 14px; }
+  .results-bar .dir-count strong { font-size: 18px; }
+  .reset { padding: 0 6px; font-size: 13px; white-space: nowrap; }
+  .sort { flex: 0 1 auto; min-width: 0; }
+  .sort select { padding: 0 30px 0 12px; font-size: 13px; max-width: 160px; background-position: right 10px center; }
+}
+@media (max-width: 359px) { .results-bar { flex-wrap: wrap; } .sort { margin-left: 0; } }
+
+/* ---------- Filter toggle (filters folded behind a button beside search) ---------- */
+.f-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-2); align-items: center; }
+.f-top .f-search { margin: 0; }
+.f-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 54px; padding: 0 20px; border-radius: var(--r-pill);
+  border: 2px solid var(--ink); background: var(--white); color: var(--ink); font: 700 15px/1 var(--font-ui); cursor: pointer; }
+.f-toggle:hover { background: var(--sky); }
+.f-toggle.is-open, .f-toggle.is-active { background: var(--ink); color: #fff; }
+.f-badge { min-width: 22px; height: 22px; padding: 0 6px; border-radius: var(--r-pill); background: var(--lime); color: var(--ink); font: 800 12px/22px var(--font-ui); text-align: center; }
+.f-panel { margin-top: var(--s-3); }
+.f-panel[hidden] { display: none; }
+.f-actions { display: flex; justify-content: flex-end; align-items: center; gap: var(--s-3); padding-top: var(--s-3); border-top: 1px dashed var(--line); }
+.f-clear { min-height: 44px; padding: 0 12px; border: 0; background: none; color: var(--violet); font: 700 14px var(--font-ui); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.f-apply { min-height: 48px; }
+@media (max-width: 639px) {
+  .f-top { margin: 0 var(--s-3); }
+  .f-toggle { min-height: 54px; padding: 0 14px; }
+  .f-toggle-label { display: none; }           /* icon + badge only, so search keeps the width */
+  .f-toggle { min-width: 54px; justify-content: center; }
+  .f-actions { padding: var(--s-3) var(--s-4) var(--s-2); }
+  .f-apply { flex: 1 1 auto; }
+}
+/* grid children default to min-width:auto and stretch to the long chip rows */
+.filters { display: block; }
+.filters > *, .f-panel, .f-top { min-width: 0; }

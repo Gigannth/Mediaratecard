@@ -55,20 +55,49 @@ const flagCount = (m) =>
   m.sections.reduce((n, s) => n + (s.review ? 1 : 0) + s.items.reduce((k, i) => k + (i.review ? 1 : 0) + (i.tiers || []).filter((t) => t.review).length, 0), 0);
 const platformNames = (m) => [...new Set(m.platforms.map((p) => p.name.replace(/\s*\(.*\)/, '')).filter((n) => n !== 'Website'))];
 
+// Platform = where the content appears. Only real platforms; never "Lainnya".
+const PLATFORMS = ['Instagram', 'TikTok', 'Threads', 'X', 'Facebook', 'YouTube'];
 const PLATFORM_RULES = [
-  ['TikTok', /tiktok/i], ['Threads', /threads/i], ['Facebook', /facebook/i], ['YouTube', /youtube/i],
-  ['X', /\bX\b|twitter/], ['Kunjungan', /visit|event|kunjungan/i],
-  ['Instagram', /instagram|\big\b|story|instastory|reels|carousel|carrousel|feed|photo|foto|single/i],
+  ['TikTok', /tiktok/i], ['Threads', /threads/i], ['Facebook', /facebook/i], ['YouTube', /youtube/i], ['X', /\bX\b|twitter/],
+  ['Instagram', /instagram|\big\b|instastory/i],
 ];
-function itemPlatforms(item, section) {
-  if (item.platform) return [item.platform];
-  if (section.platform) return [section.platform];
-  const text = `${item.service} ${item.detail || ''} ${section.title}`;
-  const found = PLATFORM_RULES.filter(([, re]) => re.test(text)).map(([p]) => p);
-  return found.length ? [...new Set(found)] : ['Lainnya'];
+// generic format words mean Instagram only when no other platform is named
+const IG_GENERIC = /story|reels|carousel|carrousel|feed|photo|foto|single/i;
+function itemPlatforms(item, section, m) {
+  if (item.platform && PLATFORMS.includes(item.platform)) return [item.platform];
+  const match = (text) => {
+    const found = [...new Set(PLATFORM_RULES.filter(([, re]) => re.test(text)).map(([p]) => p))];
+    return found.length ? found : IG_GENERIC.test(text) ? ['Instagram'] : [];
+  };
+  // most specific first: the item itself, then the section's declared platform, then section wording
+  const own = match(`${item.service} ${item.detail || ''}`);
+  if (own.length) return own;
+  if (section.platform && PLATFORMS.includes(section.platform)) return [section.platform];
+  const fromSection = match(`${section.title} ${section.note || ''}`);
+  if (fromSection.length) return fromSection;
+  // single-platform media: everything it sells runs on that platform
+  const mediaPlats = m ? platformNames(m).filter((p) => PLATFORMS.includes(p)) : [];
+  return mediaPlats.length === 1 ? mediaPlats : [];
 }
-const FORMAT_RULES = [['Story', /story|instastory/i], ['Reels', /reels/i], ['Carousel', /carousel|carrousel/i], ['Feed & foto', /feed|photo|foto|single/i], ['Media visit', /visit|kunjungan|event/i]];
-const itemFormats = (item) => FORMAT_RULES.filter(([, re]) => re.test(`${item.service} ${item.detail || ''}`)).map(([f]) => f);
+// Jenis layanan = what is being bought. An item can have several.
+const FORMAT_RULES = [
+  ['Story', /story|instastory/i],
+  ['Feed & foto', /feed|photo|foto|single|words/i],
+  ['Carousel', /carousel|carrousel/i],
+  ['Reels & video', /reels|video|^tiktok$|^youtube$/i],
+  ['Buat konten', /create content|storytelling|buat konten/i],
+  ['Kunjungan & event', /visit|event|kunjungan/i],
+  ['Paket & kontrak', /\d+\s*x\b|bulan|tahun|months?|year|featured|paket|bundling|placement/i],
+];
+const FORMATS = FORMAT_RULES.map(([f]) => f);
+const itemFormats = (item) => {
+  // what is sold is in the service name; the detail is only a fallback (it often lists free bonuses)
+  const match = (text) => FORMAT_RULES.filter(([, re]) => re.test(text)).map(([x]) => x);
+  let f = match(item.service);
+  if (!f.length) f = match(item.detail || '');
+  if (item.tiers && !f.includes('Paket & kontrak')) f.push('Paket & kontrak');
+  return f;
+};
 
 function waLink(number, text) {
   return number ? `https://wa.me/${number}?text=${encodeURIComponent(text)}` : null;
@@ -209,7 +238,7 @@ function contactBand(text = 'Ceritakan brand, target audiens, dan anggaran Anda.
 
 // ---------- media page ----------
 function renderItem(m, item, section) {
-  const plats = itemPlatforms(item, section).join(' ');
+  const plats = itemPlatforms(item, section, m).join(' ');
   if (item.tiers) {
     const tiers = item.tiers.map((t) => `
         <li class="num${t.review && DRAFTS ? ' has-flag' : ''}"><small>${esc(t.label)}</small>${t.originalPrice ? `<s>${rp(t.originalPrice)}</s>` : ''}<strong>${rp(t.price)}</strong>${flag(t.review)}</li>`).join('');
@@ -462,10 +491,21 @@ function renderDirectory() {
     if (s.collab && !DRAFTS) continue;
     for (const i of s.items) {
       const p = itemPrice(i);
-      rows.push({ m, s, i, p, plats: itemPlatforms(i, s) });
+      rows.push({ m, s, i, p, plats: itemPlatforms(i, s, m), fmts: itemFormats(i) });
     }
   }
-  const platforms = [...new Set(rows.flatMap((r) => r.plats))].sort();
+  const count = (key, v) => rows.filter((r) => r[key].includes(v)).length;
+  const platforms = PLATFORMS.filter((p) => count('plats', p));
+  const formats = FORMATS.filter((f) => count('fmts', f));
+  const BUDGETS = [['0-1000000', '< Rp 1 jt'], ['1000000-5000000', 'Rp 1–5 jt'], ['5000000-10000000', 'Rp 5–10 jt'], ['10000000-', '> Rp 10 jt']];
+  const inBudget = (p, v) => { const [lo, hi] = v.split('-'); return p >= Number(lo) && (hi === '' || p < Number(hi)); };
+  const chip = (name, value, text, n, checked) =>
+    `<label class="fchip"><input type="radio" name="${name}" value="${esc(value)}"${checked ? ' checked' : ''}><span>${esc(text)}${n !== null ? `<em>${n}</em>` : ''}</span></label>`;
+  const group = (name, legend, opts) => `
+          <fieldset class="f-group">
+            <legend>${legend}</legend>
+            <div class="f-chips" role="presentation">${chip(name, '', 'Semua', null, true)}${opts.join('')}</div>
+          </fieldset>`;
   const body = `
 <main>
   ${band({
@@ -478,24 +518,35 @@ function renderDirectory() {
     <section class="section" aria-labelledby="dir-media"><h2 id="dir-media" class="section-title">Media</h2><div class="bento">${ALL.map(tile).join('')}</div></section>
     <section class="section dir" id="bandingkan" aria-labelledby="dir-h">
       <h2 id="dir-h" class="section-title">Bandingkan semua layanan</h2>
-      <form class="filters" role="search" onsubmit="return false">
-        <label class="f-search"><span class="sr">Cari</span><input type="search" id="q" placeholder="Cari media, layanan, atau topik…" autocomplete="off"></label>
-        <fieldset class="f-chips"><legend class="sr">Platform</legend>
-          <label><input type="radio" name="plat" value="" checked><span>Semua</span></label>
-          ${platforms.map((p) => `<label><input type="radio" name="plat" value="${esc(p)}"><span>${esc(p)}</span></label>`).join('')}
-        </fieldset>
-        <div class="f-row">
-          <label>Anggaran <select id="budget"><option value="">Semua</option><option value="0-1000000">di bawah Rp 1 juta</option><option value="1000000-5000000">Rp 1–5 juta</option><option value="5000000-10000000">Rp 5–10 juta</option><option value="10000000-">di atas Rp 10 juta</option></select></label>
-          <label>Urutkan <select id="sort"><option value="">Sesuai media</option><option value="asc">Harga termurah</option><option value="desc">Harga termahal</option></select></label>
+      <form class="filters" role="search" onsubmit="return false" aria-label="Saring layanan">
+        <div class="f-top">
+          <label class="f-search"><span class="sr">Cari</span><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" placeholder="Cari media, layanan, atau topik" autocomplete="off" enterkeyhint="search"></label>
+          <button type="button" class="f-toggle" id="f-toggle" aria-expanded="false" aria-controls="f-panel" aria-label="Filter">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+            <span class="f-toggle-label">Filter</span><span class="f-badge" id="f-badge" hidden>0</span>
+          </button>
+        </div>
+        <div class="f-panel" id="f-panel" hidden>
+        ${group('plat', 'Platform', platforms.map((p) => chip('plat', p, p, count('plats', p), false)))}
+        ${group('fmt', 'Jenis layanan', formats.map((f) => chip('fmt', f, f, count('fmts', f), false)))}
+        ${group('budget', 'Anggaran', BUDGETS.map(([v, t]) => chip('budget', v, t, rows.filter((r) => inBudget(r.p, v)).length, false)))}
+          <div class="f-actions">
+            <button type="button" class="f-clear" id="f-clear">Hapus filter</button>
+            <button type="button" class="btn f-apply" id="f-apply">Lihat <span id="f-apply-n">${rows.length}</span> layanan</button>
+          </div>
         </div>
       </form>
-      <p class="dir-count" aria-live="polite"><span id="count">${rows.length}</span> layanan ditampilkan</p>
+      <div class="results-bar">
+        <p class="dir-count" aria-live="polite"><strong id="count">${rows.length}</strong> layanan</p>
+        <button type="button" class="reset" id="reset" hidden>Hapus filter</button>
+        <label class="sort"><span>Urutkan</span><select id="sort"><option value="">Relevan</option><option value="asc">Harga termurah</option><option value="desc">Harga termahal</option></select></label>
+      </div>
       <ul class="dir-list" id="dir">${rows.map((r, idx) => {
         const [bg, fg] = colors(r.m.slug);
-        const search = [label(r.m), r.i.service, ...(r.m.topics || []), ...r.plats, ...itemFormats(r.i)].join(' ').toLowerCase();
+        const search = [label(r.m), r.i.service, ...(r.m.topics || []), ...r.plats, ...r.fmts].join(' ').toLowerCase();
         const sub = [r.i.detail, r.i.tiers ? `${r.i.tiers.length} pilihan jumlah posting` : ''].filter(Boolean).join(' · ');
         return `
-        <li class="dir-row" data-q="${esc(search)}" data-plat="${esc(r.plats.join('|'))}" data-price="${r.p}" data-i="${idx}">
+        <li class="dir-row" data-q="${esc(search)}" data-plat="${esc(r.plats.join('|'))}" data-fmt="${esc(r.fmts.join('|'))}" data-price="${r.p}" data-i="${idx}">
           <a class="dir-media" href="${url(`media/${r.m.slug}/`)}" style="--media:${bg};--media-ink:${fg}">${esc(label(r.m))}</a>
           <div class="dir-svc"><strong>${esc(r.i.service)}</strong>${sub ? `<span>${esc(sub)}</span>` : ''}</div>
           <div class="dir-plat">${r.plats.map((p) => `<span class="tag">${esc(p)}</span>`).join('')}</div>
@@ -620,6 +671,8 @@ if (DRAFTS) {
   write('robots.txt', 'User-agent: *\nDisallow: /\n');
 } else {
   write('.nojekyll', '');
+  // Custom domain: GitHub Pages reads docs/CNAME. Written automatically when siteUrl is not *.github.io.
+  if (SITE_URL && !/\.github\.io$/i.test(new URL(SITE_URL).hostname)) write('CNAME', new URL(SITE_URL).hostname + '\n');
   if (SITE_URL) {
     const today = new Date().toISOString().slice(0, 10);
     write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map((p) => `  <url><loc>${abs(p)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}\n</urlset>\n`);

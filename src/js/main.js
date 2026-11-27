@@ -15,50 +15,95 @@
   // Progressive: links stay real <a> tags; without JS / with reduced motion the static cloud remains.
   initCloud();
 
-  // Directory: search, platform, budget, sort
+  // Directory: search + one choice per group (platform, jenis, anggaran) + sort
   var list = document.getElementById('dir');
   if (!list) return;
   var rows = Array.prototype.slice.call(list.children);
   var q = document.getElementById('q');
-  var budget = document.getElementById('budget');
   var sort = document.getElementById('sort');
   var count = document.getElementById('count');
   var empty = document.getElementById('empty');
+  var reset = document.getElementById('reset');
+  var radios = document.querySelectorAll('.filters input[type="radio"]');
+  // filter groups stay folded until the user opens them with the button next to search
+  var toggle = document.getElementById('f-toggle');
+  var panel = document.getElementById('f-panel');
+  var badge = document.getElementById('f-badge');
+  var applyN = document.getElementById('f-apply-n');
+  function setOpen(open) {
+    panel.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.classList.toggle('is-open', open);
+  }
+  toggle.addEventListener('click', function () { setOpen(panel.hidden); });
+  document.getElementById('f-apply').addEventListener('click', function () {
+    setOpen(false);
+    document.querySelector('.results-bar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  document.getElementById('f-clear').addEventListener('click', function () {
+    document.querySelectorAll('.filters input[type="radio"][value=""]').forEach(function (i) { i.checked = true; });
+    apply();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !panel.hidden) { setOpen(false); toggle.focus(); }
+  });
+  var val = function (name) { var el = document.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; };
 
+  // deep links: ?q=Reels  ?plat=TikTok  ?fmt=Story  ?budget=0-1000000  ?sort=asc
   var params = new URLSearchParams(location.search);
   if (params.get('q')) q.value = params.get('q');
+  ['plat', 'fmt', 'budget'].forEach(function (n) {
+    var v = params.get(n);
+    if (!v) return;
+    var el = document.querySelector('input[name="' + n + '"][value="' + CSS.escape(v) + '"]');
+    if (el) el.checked = true;
+  });
+  if (params.get('sort')) sort.value = params.get('sort');
 
   function apply() {
     var term = q.value.trim().toLowerCase();
-    var plat = (document.querySelector('input[name="plat"]:checked') || {}).value || '';
-    var range = (budget.value || '').split('-');
+    var plat = val('plat'), fmt = val('fmt'), budget = val('budget');
+    var range = budget.split('-');
     var lo = Number(range[0] || 0), hi = range[1] ? Number(range[1]) : Infinity;
     var shown = 0;
     rows.forEach(function (r) {
       var price = Number(r.dataset.price);
       var ok = (!term || term.split(/\s+/).every(function (w) { return r.dataset.q.indexOf(w) !== -1; })) &&
         (!plat || r.dataset.plat.split('|').indexOf(plat) !== -1) &&
-        (!budget.value || (price >= lo && price < hi));
+        (!fmt || r.dataset.fmt.split('|').indexOf(fmt) !== -1) &&
+        (!budget || (price >= lo && price < hi));
       r.hidden = !ok;
       if (ok) shown++;
     });
-    var ordered = rows.slice().sort(function (a, b) {
+    rows.slice().sort(function (a, b) {
       if (sort.value === 'asc') return a.dataset.price - b.dataset.price;
       if (sort.value === 'desc') return b.dataset.price - a.dataset.price;
       return a.dataset.i - b.dataset.i;
-    });
-    ordered.forEach(function (r) { list.appendChild(r); });
+    }).forEach(function (r) { list.appendChild(r); });
     count.textContent = shown;
     empty.hidden = shown !== 0;
+    reset.hidden = !(term || plat || fmt || budget || sort.value);
+    var active = [plat, fmt, budget].filter(Boolean).length;
+    badge.textContent = active; badge.hidden = !active;
+    toggle.classList.toggle('is-active', active > 0);
+    applyN.textContent = shown;
+
     var url = new URL(location.href);
-    if (term) url.searchParams.set('q', q.value.trim()); else url.searchParams.delete('q');
+    [['q', q.value.trim()], ['plat', plat], ['fmt', fmt], ['budget', budget], ['sort', sort.value]].forEach(function (p) {
+      if (p[1]) url.searchParams.set(p[0], p[1]); else url.searchParams.delete(p[0]);
+    });
     history.replaceState(null, '', url);
   }
 
   q.addEventListener('input', apply);
-  budget.addEventListener('change', apply);
   sort.addEventListener('change', apply);
-  document.querySelectorAll('input[name="plat"]').forEach(function (i) { i.addEventListener('change', apply); });
+  radios.forEach(function (i) { i.addEventListener('change', apply); });
+  reset.addEventListener('click', function () {
+    q.value = ''; sort.value = '';
+    document.querySelectorAll('.filters input[type="radio"][value=""]').forEach(function (i) { i.checked = true; });
+    apply();
+    q.focus();
+  });
   apply();
 })();
 
