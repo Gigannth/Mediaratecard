@@ -141,8 +141,10 @@ function metricChips(m) {
 const IG_ICON = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor" stroke="none"/></svg>';
 
 // ---------- layout ----------
+const META_WARN = [];
 function page({ title, description, body, current, sticky = '', canonical = '', jsonld = [] }) {
   const can = abs(canonical);
+  if (title.length > 60 || description.length > 160) META_WARN.push(`${canonical || '/'}: title ${title.length}, description ${description.length}`);
   return `<!doctype html>
 <html lang="id">
 <head>
@@ -361,13 +363,44 @@ function renderMedia(m) {
 </main>`;
 
   const sticky = `<div class="sticky-cta"><div><small>${esc(label(m))} · mulai dari</small><strong class="num">${rp(from)}</strong></div>${general ? `<a class="btn btn--sm" href="${esc(general)}" target="_blank" rel="noopener">Tanya via WhatsApp</a>` : `<span class="btn btn--sm" aria-disabled="true">Kontak belum ada</span>`}</div>`;
-  const svcNames = [...new Set(ownSections(m).flatMap((s) => s.items.map((i) => i.service)))].slice(0, 3).join(', ');
   return page({
-    title: `Rate Card ${label(m)} 2026: Harga ${plats.join(', ')} | ${SITE}`,
-    description: `Rate card ${label(m)} mulai dari ${rp(from)}. Lihat harga ${svcNames} dan layanan lainnya, lalu tanyakan jadwal tayang via WhatsApp.`,
+    title: mediaTitle(m),
+    description: mediaDesc(m),
     body, current: 'media', sticky, canonical: `media/${m.slug}/`,
     jsonld: [breadcrumbLd(crumbs)],
   });
+}
+
+// ---------- SEO meta for media pages ----------
+// Google shows ~60 chars of a title and ~155 of a description; longer text is cut with "…".
+const TITLE_MAX = 60, DESC_MAX = 155;
+const joinID = (a) => (a.length < 2 ? a.join('') : `${a.slice(0, -1).join(', ')} & ${a[a.length - 1]}`);
+function platformsByWeight(m) {
+  const n = {};
+  for (const s of ownSections(m)) for (const i of s.items) for (const p of itemPlatforms(i, s, m)) n[p] = (n[p] || 0) + 1;
+  return Object.keys(n).sort((a, b) => n[b] - n[a] || PLATFORMS.indexOf(a) - PLATFORMS.indexOf(b));
+}
+function mediaTitle(m) {
+  const plats = platformsByWeight(m);
+  const base = `Rate Card ${label(m)} 2026: Harga `;
+  const options = [
+    plats.length > 2 ? `${plats.slice(0, 2).join(', ')} & lainnya` : joinID(plats),
+    plats.length > 1 ? `${plats[0]} & ${plats[1]}` : plats[0],
+    plats[0],
+  ].filter(Boolean);
+  for (const o of options) if ((base + o).length <= TITLE_MAX) return base + o;
+  return `Rate Card ${label(m)} 2026`;
+}
+function mediaDesc(m) {
+  const from = rp(minPrice(m));
+  const svcs = [...new Set(ownSections(m).flatMap((s) => s.items).filter((i) => !i.tiers || true).map((i) => i.service))];
+  const topic = m.tagline.replace(/\.$/, '');
+  const tail = 'Tanya via WhatsApp.';
+  // richest sentence first (topic + at least 2 services), then drop parts until it fits
+  const tries = [];
+  for (let k = 3; k >= 2; k--) tries.push(`${label(m)}: ${topic}. Rate card mulai ${from}: ${joinID(svcs.slice(0, k))}. ${tail}`);
+  for (let k = 3; k >= 1; k--) tries.push(`Rate card ${label(m)} 2026 mulai ${from}: ${joinID(svcs.slice(0, k))}, dan lainnya. ${tail}`);
+  return tries.find((t) => t.length <= DESC_MAX) || tries[tries.length - 1].slice(0, DESC_MAX);
 }
 
 // ---------- tiles ----------
@@ -481,8 +514,8 @@ function renderHome() {
   ${contactBand()}
 </main>`;
   return page({
-    title: `${SITE}: Rate Card & Harga Media Online Indonesia`,
-    description: 'Lihat rate card media online Indonesia secara terbuka: harga Instagram Story, Feed, Reels, TikTok, Threads, hingga media visit. Bandingkan, lalu tanyakan jadwal lewat WhatsApp.',
+    title: `${SITE}: Harga Media Online Indonesia`,
+    description: `Rate card ${ALL.length} media online Indonesia dengan harga terbuka: Instagram Story, Reels, TikTok, Threads, hingga media visit. Bandingkan, lalu tanya via WhatsApp.`,
     body, current: 'home', canonical: '',
     jsonld: [
       { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE, url: abs(''), inLanguage: 'id' },
@@ -568,7 +601,7 @@ function renderDirectory() {
   ${contactBand()}
 </main>`;
   return page({
-    title: `Semua Media & Perbandingan Harga Rate Card | ${SITE}`,
+    title: `Semua Media: Bandingkan Harga Rate Card ${ALL.length} Media`,
     description: `Bandingkan ${rows.length} layanan dari ${ALL.length} media online: harga Instagram Story, Reels, Feed, TikTok, Threads, dan media visit dalam Rupiah.`,
     body, current: 'media', canonical: 'media/',
     jsonld: [breadcrumbLd([['Beranda', null, ''], ['Semua Media', null, 'media/']])],
@@ -691,4 +724,5 @@ if (DRAFTS) {
 }
 
 console.log(`${DRAFTS ? 'DRAFT preview' : 'Site'}: ${ALL.length} media, ${pages.length} pages → ${path.relative(ROOT, OUT)}`);
+if (META_WARN.length) console.warn('! Meta too long (Google cuts titles >60, descriptions >160):\n  ' + META_WARN.join('\n  '));
 for (const m of ALL) console.log(`  ${m.slug.padEnd(12)} ${m.status.padEnd(9)} from ${rp(minPrice(m)).padEnd(14)} ${serviceCount(m)} services${DRAFTS ? `, ${flagCount(m)} flags` : ''}`);
