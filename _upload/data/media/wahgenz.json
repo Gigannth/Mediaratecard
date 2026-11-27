@@ -1,0 +1,188 @@
+{
+  "slug": "wahgenz",
+  "name": "WAHGENZ",
+  "group": "flux",
+  "status": "published",
+  "updated": "November 2026",
+  "validity": "Rate card Oktober 2026",
+  "topics": [
+    "Fakta unik",
+    "Berita dunia",
+    "Gen Z"
+  ],
+  "tagline": "Kisah, fakta unik, dan berita dunia untuk Gen Z.",
+  "description": "WAHGENZ membagikan kisah, fakta unik, dan berita dari berbagai belahan dunia dengan gaya ringan yang dekat dengan Gen Z. Kontennya dirancang dengan hook kuat dan format yang mudah dibagikan, dari Reels hingga carousel. Selain posting dari materi klien, WAHGENZ juga menerima pembuatan konten bercerita (storytelling).",
+  "platforms": [
+    {
+      "name": "Instagram",
+      "handle": "@wahgenz"
+    }
+  ],
+  "contact": {
+    "whatsapp": "6288293486530"
+  },
+  "sections": [
+    {
+      "title": "Instagram",
+      "note": "RTP = materi dari klien (ready to post).",
+      "items": [
+        {
+          "service": "Reels RTP",
+          "price": 7500000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Feed carousel RTP",
+          "price": 7500000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Feed photo RTP",
+          "price": 6000000,
+          "unit": "per posting",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Instastory RTP",
+          "price": 500000,
+          "unit": "per story",
+          "duration": "Tayang 24 jam"
+        }
+      ]
+    },
+    {
+      "title": "Paket multi-posting",
+      "items": [
+        {
+          "service": "Reels RTP",
+          "detail": "6x posting",
+          "price": 44000000,
+          "originalPrice": 45000000,
+          "unit": "per paket",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Carousel RTP",
+          "detail": "6x posting",
+          "price": 44500000,
+          "originalPrice": 45000000,
+          "unit": "per paket",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Reels RTP",
+          "detail": "12x posting",
+          "price": 88000000,
+          "originalPrice": 90000000,
+          "unit": "per paket",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Carousel RTP",
+          "detail": "12x posting",
+          "price": 88000000,
+          "originalPrice": 90000000,
+          "unit": "per paket",
+          "duration": "Tayang 24 jam",
+          "hold": true
+        }
+      ]
+    },
+    {
+      "title": "Storytelling content",
+      "items": [
+        {
+          "service": "Create content",
+          "detail": "Konten bercerita dibuat oleh tim WAHGENZ",
+          "price": 10000000,
+          "unit": "per konten",
+          "duration": "Tayang permanen"
+        }
+      ]
+    },
+    {
+      "title": "Kolaborasi WAHGENZ × WTIMELINE",
+      "collab": true,
+      "items": [
+        {
+          "service": "Reels",
+          "price": 8000000,
+          "originalPrice": 9000000,
+          "unit": "per paket",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Feed carousel",
+          "price": 8000000,
+          "originalPrice": 9000000,
+          "unit": "per paket",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Feed photo",
+          "price": 7000000,
+          "originalPrice": 7500000,
+          "unit": "per paket",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Instastory",
+          "price": 750000,
+          "originalPrice": 1000000,
+          "unit": "per paket",
+          "duration": "Tayang 24 jam"
+        }
+      ]
+    },
+    {
+      "title": "Kolaborasi WAHGENZ × FOLKSHITKUY",
+      "collab": true,
+      "items": [
+        {
+          "service": "Reels",
+          "price": 12000000,
+          "originalPrice": 12500000,
+          "unit": "per paket",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Feed carousel",
+          "price": 12000000,
+          "originalPrice": 12500000,
+          "unit": "per paket",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Feed photo",
+          "price": 10000000,
+          "originalPrice": 11000000,
+          "unit": "per paket",
+          "duration": "Tayang permanen"
+        },
+        {
+          "service": "Instastory",
+          "price": 900000,
+          "originalPrice": 1000000,
+          "unit": "per paket",
+          "duration": "Tayang 24 jam"
+        }
+      ]
+    }
+  ],
+  "terms": [
+    "Iklan baru diposting setelah pembayaran diterima.",
+    "Sebelum membayar, konfirmasi jadwal hari dan jam posting yang diinginkan.",
+    "Tidak menerima iklan yang melanggar hukum, rokok, produk tanpa izin edar BPOM, dan judi online.",
+    "Setelah invoice dibuat dan pembayaran diterima, pembayaran tidak dapat dikembalikan."
+  ],
+  "instagram": "wahgenz",
+  "metrics": {
+    "asOf": null,
+    "followers": null,
+    "engagementRate": null,
+    "avgLikes": null,
+    "avgComments": null
+  }
+}

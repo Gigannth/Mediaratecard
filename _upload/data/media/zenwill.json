@@ -1,0 +1,90 @@
+{
+  "slug": "zenwill",
+  "name": "ZENWILL",
+  "group": "independent",
+  "status": "hidden",
+  "updated": "November 2026",
+  "tagline": "Media sosial dengan kanal di Instagram, TikTok, dan Facebook.",
+  "description": "ZENWILL adalah media sosial yang hadir di Instagram, TikTok, dan Facebook. Brand dapat memasang konten berbayar dalam format Instagram Story, Feed hingga 10 slide, dan Reels hingga 3 menit, serta posting di TikTok dan Facebook. Untuk kolaborasi yang lebih dalam, tersedia media visit yang sudah termasuk pembuatan konten orisinal.",
+  "platforms": [
+    {
+      "name": "Instagram",
+      "handle": null
+    },
+    {
+      "name": "TikTok",
+      "handle": "@zenwill_official"
+    },
+    {
+      "name": "Facebook",
+      "handle": "@zenwill_official"
+    }
+  ],
+  "contact": {
+    "whatsapp": "62882005498357"
+  },
+  "notice": "Rate card ZENWILL tidak mencantumkan durasi tayang, kebijakan revisi, atau pajak. Detail ini kami konfirmasi saat Anda bertanya.",
+  "sections": [
+    {
+      "title": "Instagram",
+      "platform": "Instagram",
+      "items": [
+        {
+          "service": "Instagram Story",
+          "detail": "Foto atau video",
+          "price": 2000000,
+          "unit": "per posting",
+          "type": "Story"
+        },
+        {
+          "service": "Instagram Feed",
+          "detail": "Foto atau video, hingga 10 slide",
+          "price": 15000000,
+          "unit": "per posting",
+          "type": "Feed"
+        },
+        {
+          "service": "Instagram Reels",
+          "detail": "Video, maksimal 3 menit",
+          "price": 15000000,
+          "unit": "per posting",
+          "type": "Reels"
+        }
+      ]
+    },
+    {
+      "title": "TikTok & Facebook",
+      "items": [
+        {
+          "service": "TikTok",
+          "detail": "Foto atau video",
+          "price": 5000000,
+          "unit": "per posting",
+          "platform": "TikTok",
+          "type": "Video"
+        },
+        {
+          "service": "Facebook",
+          "detail": "Foto atau video, hingga 10 slide",
+          "price": 5000000,
+          "unit": "per posting",
+          "platform": "Facebook",
+          "type": "Feed"
+        }
+      ]
+    },
+    {
+      "title": "Kunjungan media",
+      "platform": "Kunjungan",
+      "items": [
+        {
+          "service": "Media Visit",
+          "detail": "Termasuk pembuatan konten orisinal",
+          "price": 20000000,
+          "unit": "per kunjungan",
+          "type": "Kunjungan"
+        }
+      ]
+    }
+  ]
+}

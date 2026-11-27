@@ -1,0 +1,360 @@
+{
+  "slug": "ssmedia",
+  "name": "SSMEDIA",
+  "displayName": "SS Media ID",
+  "group": "flux",
+  "status": "published",
+  "updated": "November 2026",
+  "validity": "Berlaku Oktober–Desember 2026",
+  "topics": [
+    "Viral",
+    "Selebriti",
+    "Gaya hidup & keluarga"
+  ],
+  "tagline": "Screenshot viral serta klip berita dan selebriti dengan sudut gaya hidup dan keluarga.",
+  "description": "SS Media ID mempublikasikan screenshot viral serta klip pendek berita dan selebriti setiap hari, dengan sudut pandang gaya hidup dan keluarga. Kontennya tersebar di Instagram, TikTok, Threads, Facebook, dan YouTube, sehingga satu kampanye bisa ditayangkan di beberapa platform sekaligus. Tim SS Media juga membantu menyiapkan template desain, hook, dan caption.",
+  "platforms": [
+    {
+      "name": "Instagram",
+      "handle": "@ssmedia_id"
+    },
+    {
+      "name": "TikTok",
+      "handle": "@ssmediaid"
+    },
+    {
+      "name": "Threads",
+      "handle": "@ssmedia_id"
+    },
+    {
+      "name": "Facebook",
+      "handle": "SS Media ID"
+    },
+    {
+      "name": "YouTube",
+      "handle": "@ssmediaid.official"
+    }
+  ],
+  "contact": {
+    "whatsapp": "6288293486530"
+  },
+  "highlights": [
+    "Gratis desain template, hook, dan caption.",
+    "Format foto/carousel bebas jumlah slide.",
+    "Harga khusus untuk brand yang booking slot berulang kali.",
+    "Kontrak minimal 10 konten: gratis 1x penempatan brand di program “Spil Gosip Tetangga”."
+  ],
+  "sections": [
+    {
+      "title": "Paket per platform",
+      "note": "Harga untuk 1x, 3x, 6x, atau 12x posting.",
+      "items": [
+        {
+          "service": "Bundling semua platform",
+          "detail": "Instagram, TikTok, Threads, Facebook & YouTube · gratis story, template & caption di semua platform",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 6000000,
+              "originalPrice": 8000000
+            },
+            {
+              "label": "3x",
+              "price": 16000000,
+              "originalPrice": 18000000
+            },
+            {
+              "label": "6x",
+              "price": 30000000,
+              "originalPrice": 28000000,
+              "hold": true
+            },
+            {
+              "label": "12x",
+              "price": 55000000,
+              "originalPrice": 47000000,
+              "hold": true
+            }
+          ]
+        },
+        {
+          "service": "Instagram carousel",
+          "detail": "Gratis 1x posting di Threads",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 3500000
+            },
+            {
+              "label": "3x",
+              "price": 9000000
+            },
+            {
+              "label": "6x",
+              "price": 18000000
+            },
+            {
+              "label": "12x",
+              "price": 38000000
+            }
+          ]
+        },
+        {
+          "service": "Instagram Reels",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 3000000
+            },
+            {
+              "label": "3x",
+              "price": 7500000
+            },
+            {
+              "label": "6x",
+              "price": 16000000
+            },
+            {
+              "label": "12x",
+              "price": 32000000
+            }
+          ]
+        },
+        {
+          "service": "Instagram Story",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 300000
+            },
+            {
+              "label": "3x",
+              "price": 500000
+            },
+            {
+              "label": "6x",
+              "price": 800000
+            },
+            {
+              "label": "12x",
+              "price": 1000000
+            }
+          ]
+        },
+        {
+          "service": "TikTok",
+          "detail": "Gratis 1x posting di Story",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 1500000
+            },
+            {
+              "label": "3x",
+              "price": 4000000
+            },
+            {
+              "label": "6x",
+              "price": 6000000
+            },
+            {
+              "label": "12x",
+              "price": 10000000
+            }
+          ]
+        },
+        {
+          "service": "TikTok Story",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 150000
+            },
+            {
+              "label": "3x",
+              "price": 400000
+            },
+            {
+              "label": "6x",
+              "price": 600000
+            },
+            {
+              "label": "12x",
+              "price": 900000
+            }
+          ]
+        },
+        {
+          "service": "YouTube",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 500000
+            },
+            {
+              "label": "3x",
+              "price": 1000000
+            },
+            {
+              "label": "6x",
+              "price": 2000000
+            },
+            {
+              "label": "12x",
+              "price": 3500000
+            }
+          ]
+        },
+        {
+          "service": "Threads",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 1000000
+            },
+            {
+              "label": "3x",
+              "price": 2000000
+            },
+            {
+              "label": "6x",
+              "price": 4000000
+            },
+            {
+              "label": "12x",
+              "price": 8000000
+            }
+          ]
+        },
+        {
+          "service": "Facebook",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 200000
+            },
+            {
+              "label": "3x",
+              "price": 500000
+            },
+            {
+              "label": "6x",
+              "price": 1000000
+            },
+            {
+              "label": "12x",
+              "price": 2000000
+            }
+          ]
+        },
+        {
+          "service": "Bapaknyass",
+          "detail": "Gratis 1x posting di Threads SS Media ID",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 300000
+            },
+            {
+              "label": "3x",
+              "price": 700000
+            },
+            {
+              "label": "6x",
+              "price": 1500000
+            },
+            {
+              "label": "12x",
+              "price": 2500000
+            }
+          ],
+          "hold": true
+        }
+      ]
+    },
+    {
+      "title": "Best deal: Instagram + mirroring ke TikTok",
+      "note": "Carousel atau Reels. Materi dari klien · gratis headline, caption, dan codeboost 1 bulan.",
+      "items": [
+        {
+          "service": "Carousel/Reels + mirroring TikTok",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 4000000
+            },
+            {
+              "label": "2x",
+              "price": 7000000
+            },
+            {
+              "label": "3x",
+              "price": 10000000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Placement di carousel berita SS Media",
+      "note": "Logo atau video brand Anda tampil di slide terakhir carousel berita SS Media.",
+      "items": [
+        {
+          "service": "End carousel placement",
+          "detail": "20x posting (slide terakhir)",
+          "price": 3000000,
+          "unit": "per paket"
+        },
+        {
+          "service": "End carousel placement",
+          "detail": "200x posting (slide terakhir)",
+          "price": 10000000,
+          "unit": "per paket"
+        }
+      ]
+    },
+    {
+      "title": "Kunjungan media",
+      "items": [
+        {
+          "service": "Media visit & create content",
+          "detail": "2 konten eksklusif (editing, copywriting, arahan konten) · mirroring Instagram & TikTok · 3 Instagram Story di hari kunjungan",
+          "price": 8000000,
+          "unit": "per kunjungan"
+        }
+      ]
+    },
+    {
+      "title": "Bundling 5 media FLUX",
+      "collab": true,
+      "note": "SS Media, WAHGENZ, FOLKSHITKUY, DEMEN FILM, dan JONBRAY. Carousel/Reels · materi dari klien · gratis headline, caption, dan codeboost 1 bulan.",
+      "items": [
+        {
+          "service": "Bundling 5 media",
+          "tiers": [
+            {
+              "label": "1x",
+              "price": 17000000
+            },
+            {
+              "label": "2x",
+              "price": 32000000
+            },
+            {
+              "label": "3x",
+              "price": 46000000
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "instagram": "ssmedia_id",
+  "metrics": {
+    "asOf": null,
+    "followers": null,
+    "engagementRate": null,
+    "avgLikes": null,
+    "avgComments": null
+  }
+}

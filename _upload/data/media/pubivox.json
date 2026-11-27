@@ -1,0 +1,83 @@
+{
+  "slug": "pubivox",
+  "name": "PUBIVOX",
+  "group": "independent",
+  "status": "hidden",
+  "updated": "November 2026",
+  "topics": [
+    "Gen Z",
+    "Tren & budaya pop",
+    "Informasi terkini"
+  ],
+  "tagline": "Media untuk Gen Z: topik yang sedang ramai, informasi terkini, dan percakapan budaya.",
+  "description": "PUBIVOX adalah platform media yang berfokus pada Gen Z. Setiap hari PUBIVOX menyajikan cerita yang relevan, mulai dari topik yang sedang ramai dan informasi terkini hingga percakapan budaya dan sudut pandang yang dekat dengan generasi muda. Penempatan konten tersedia di Instagram dan Threads, termasuk media visit dengan pembuatan konten orisinal.",
+  "platforms": [
+    {
+      "name": "Instagram",
+      "handle": null
+    },
+    {
+      "name": "Threads",
+      "handle": "@pubivox"
+    }
+  ],
+  "contact": {
+    "whatsapp": "62882005498357"
+  },
+  "notice": "Rate card PUBIVOX tidak mencantumkan durasi tayang, kebijakan revisi, atau pajak. Detail ini kami konfirmasi saat Anda bertanya.",
+  "sections": [
+    {
+      "title": "Instagram",
+      "platform": "Instagram",
+      "items": [
+        {
+          "service": "Instagram Story",
+          "detail": "Foto atau video",
+          "price": 2000000,
+          "unit": "per posting",
+          "type": "Story"
+        },
+        {
+          "service": "Instagram Feed",
+          "detail": "Foto atau video, hingga 10 slide",
+          "price": 6000000,
+          "unit": "per posting",
+          "type": "Feed"
+        },
+        {
+          "service": "Instagram Reels",
+          "detail": "Video, maksimal 3 menit",
+          "price": 6000000,
+          "unit": "per posting",
+          "type": "Reels"
+        }
+      ]
+    },
+    {
+      "title": "Threads",
+      "platform": "Threads",
+      "items": [
+        {
+          "service": "Threads",
+          "detail": "Foto atau video, hingga 10 slide",
+          "price": 2000000,
+          "unit": "per posting",
+          "type": "Feed"
+        }
+      ]
+    },
+    {
+      "title": "Kunjungan media",
+      "platform": "Kunjungan",
+      "items": [
+        {
+          "service": "Media Visit",
+          "detail": "Termasuk pembuatan konten orisinal",
+          "price": 10000000,
+          "unit": "per kunjungan",
+          "type": "Kunjungan"
+        }
+      ]
+    }
+  ]
+}

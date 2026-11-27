@@ -1,0 +1,127 @@
+{
+  "slug": "demen-film",
+  "name": "DEMEN FILM",
+  "group": "flux",
+  "status": "published",
+  "updated": "November 2026",
+  "topics": [
+    "Film"
+  ],
+  "tagline": "Rekomendasi film terbaru dan fakta menarik dari dunia perfilman.",
+  "description": "Demen Film membahas dunia film setiap hari: rekomendasi film terbaru, fakta di balik layar, dan ulasan. Seri kontennya meliputi Funfact Reels, carousel/listicle, dan movie review, ditambah liputan acara seperti wawancara dan kunjungan screening. Paket featured disiapkan khusus untuk promosi film dalam jangka 3 bulan hingga 1 tahun.",
+  "platforms": [
+    {
+      "name": "Instagram",
+      "handle": "@demen_film"
+    }
+  ],
+  "contact": {
+    "whatsapp": "6285177800903"
+  },
+  "sections": [
+    {
+      "title": "Instagram",
+      "items": [
+        {
+          "service": "Story",
+          "price": 800000,
+          "unit": "per story"
+        },
+        {
+          "service": "Feed/carousel",
+          "price": 2500000,
+          "unit": "per posting"
+        },
+        {
+          "service": "Reels",
+          "price": 3000000,
+          "unit": "per posting"
+        },
+        {
+          "service": "Paket feed/reels",
+          "detail": "10 posting",
+          "price": 15000000,
+          "unit": "per paket",
+          "hold": true
+        }
+      ]
+    },
+    {
+      "title": "Layanan tambahan",
+      "addon": true,
+      "items": [
+        {
+          "service": "Visit",
+          "detail": "Termasuk 1x story dan 1x reels",
+          "price": 3000000,
+          "unit": "per kunjungan"
+        },
+        {
+          "service": "Create content: Reels",
+          "price": 3500000,
+          "unit": "per konten"
+        },
+        {
+          "service": "Create content: carousel",
+          "price": 3000000,
+          "unit": "per konten"
+        },
+        {
+          "service": "Mirror ke media partner @eatbiz",
+          "detail": "Feed/reels",
+          "price": 2500000,
+          "unit": "per posting",
+          "hold": true
+        }
+      ]
+    },
+    {
+      "title": "Featured untuk promosi film",
+      "note": "Mencakup posting feed, story, dan reels dengan konten sesuai arahan klien (film), fleksibel dalam tema dan format. Jumlah posting tidak disebutkan di rate card.",
+      "items": [
+        {
+          "service": "3 months featured",
+          "detail": "Kontrak 3 bulan",
+          "price": 30000000,
+          "unit": "per kontrak"
+        },
+        {
+          "service": "6 months featured",
+          "detail": "Kontrak 6 bulan",
+          "price": 55000000,
+          "unit": "per kontrak"
+        },
+        {
+          "service": "1 year featured",
+          "detail": "Kontrak 1 tahun",
+          "price": 70000000,
+          "unit": "per kontrak"
+        }
+      ]
+    },
+    {
+      "title": "Kolaborasi DEMEN FILM × WAHGENZ",
+      "collab": true,
+      "items": [
+        {
+          "service": "Feed/carousel",
+          "price": 8000000,
+          "unit": "per paket"
+        },
+        {
+          "service": "Reels",
+          "price": 10000000,
+          "unit": "per paket"
+        }
+      ]
+    }
+  ],
+  "instagram": "demen_film",
+  "metrics": {
+    "asOf": null,
+    "followers": null,
+    "engagementRate": null,
+    "avgLikes": null,
+    "avgComments": null
+  }
+}
